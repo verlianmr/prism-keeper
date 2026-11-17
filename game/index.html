@@ -3,25 +3,100 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Prism Keeper</title>
+<meta name="description" content="Prism Keeper — a neon colour-matching arcade game. Hold the core, chain matches for a rising multiplier, catch prism shards for shields.">
+<meta name="color-scheme" content="dark">
+<title>Prism Keeper — hold the core, chain the light</title>
 <style>
-  :root { color-scheme: dark; }
+  :root {
+    color-scheme: dark;
+    --ink: #e8ecff;
+    --muted: #6a7392;
+    --cyan: #38e8ff;
+    --magenta: #ff5fd2;
+    --lime: #9dff5f;
+    --gold: #ffd166;
+    --prism: #ffe9a8;
+  }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #05060f; overflow: hidden; }
-  body { display: grid; place-items: center; font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif; }
-  #stage { position: relative; width: 100vw; height: 100vh; }
+  body {
+    display: grid;
+    place-items: center;
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    background:
+      radial-gradient(circle at 50% 45%, #0b0e22 0%, #05060f 62%, #02030a 100%);
+    color: var(--ink);
+  }
+
+  /* The stage keeps the canvas at its native 16:9 (1280x720) instead of stretching it. */
+  #stage {
+    position: relative;
+    width: min(100vw, calc(100vh * 16 / 9));
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(90, 120, 220, 0.22),
+      0 0 42px rgba(56, 232, 255, 0.10),
+      0 24px 90px rgba(0, 0, 0, 0.75);
+  }
   canvas { display: block; width: 100%; height: 100%; }
+
   #hint {
-    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
-    color: #6a7392; font-size: 12px; letter-spacing: .08em; pointer-events: none;
-    text-shadow: 0 0 8px #000; user-select: none;
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(5, 6, 15, 0.62);
+    border: 1px solid rgba(90, 120, 220, 0.16);
+    backdrop-filter: blur(6px);
+    color: #93a0c4;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    text-align: center;
+    text-shadow: 0 0 8px #000;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #hint .keys { color: #c6d2ff; }
+  #hint .keys b { color: var(--gold); font-weight: 700; }
+  #hint .tip { color: #6f7a9c; font-size: 10px; letter-spacing: 0.04em; }
+  #hint .tip em { font-style: normal; color: var(--prism); }
+  #hint .sep { color: rgba(120, 140, 180, 0.5); }
+
+  @media (max-width: 900px), (max-height: 520px) {
+    #hint { font-size: 9px; padding: 4px 10px; gap: 6px; }
+    #hint .tip { display: none; }
+  }
+  noscript {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: #05060f; color: var(--ink); font-size: 16px;
   }
 </style>
 </head>
 <body>
 <div id="stage">
-  <canvas id="game" width="1280" height="720"></canvas>
-  <div id="hint">MOUSE aim &nbsp;·&nbsp; CLICK / SPACE fire &nbsp;·&nbsp; 1 2 3 switch colour &nbsp;·&nbsp; P pause</div>
+  <canvas id="game" width="1280" height="720" aria-label="Prism Keeper play area"></canvas>
+
+  <div id="hint">
+    <span class="keys">
+      <b>MOUSE</b> aim &nbsp;·&nbsp; <b>CLICK / SPACE</b> fire &nbsp;·&nbsp;
+      <b>1 2 3</b> switch colour &nbsp;·&nbsp; <b>B</b> burst &nbsp;·&nbsp; <b>P</b> pause
+    </span>
+    <span class="sep">|</span>
+    <span class="tip">
+      chain matches for a rising multiplier &nbsp;·&nbsp; match a <em>prism shard</em> for +1 shield
+    </span>
+  </div>
+
+  <noscript>Prism Keeper needs JavaScript enabled to run.</noscript>
 </div>
 <script type="module" src="./src/main.js"></script>
 </body>
